@@ -9,17 +9,14 @@ const fetchData = async () => {
     const nodesRes = resJson.data.posts.nodes;
     console.log(resJson);
     //console.log(resJson.data.posts.nodes);
+    //console.log(nodesRes);
 
-    //②WP タイトル の情報取得
-    let titles = await getPostsNodesData(nodesRes, 'title');
-    console.log(titles);
+    // ②タイトルとコンテンツその他 の情報取得
+    const postsData = getPostsData(nodesRes);
+    console.log(postsData);
 
-    //③WP 本文 の情報取得
-    const contents = await getPostsNodesData(nodesRes, 'content');
-    console.log(contents);
-
-    //
-    viewPostdata(titles);
+    // ③タイトルとコンテンツの表示
+    viewPostData(postsData);
 
   } catch (error) {
     console.error(error);
@@ -44,6 +41,7 @@ function getAllQueryData(url) {
               nodes {
                 title
                 content
+                date
               }
             }
           }
@@ -61,24 +59,38 @@ function getAllQueryData(url) {
   });
 }
 
-//WP  投稿データ の情報取得 関数
-function getPostsNodesData(data, propertyName) {
-  return new Promise((resolve, reject) => {
-      //console.log(data);
-      const datas = data.map(post => post[propertyName]);
-      resolve(datas);
+// タイトルと本文のオブジェクトを作成
+function getPostsData(data) {
+  return data.map((post) => {
+    return {
+      title: post.title,
+      content: post.content,
+      date: post.date,
+    };
   });
 }
 
-//postコンテンツ表示
-const viewPostdata = (titles) => {
-  const PostTitleElement = document.querySelector("#js-post--titile");
-  const PostContentElemen = document.querySelector("#js-post--content");
+// 記事の表示関数
+const viewPostData = (postData) => {
+  const postContainerElement = document.querySelector('#js-post-container');
 
-  console.log(titles);
-  titles.forEach(item => {
-    const titileElement = document.createElement("li");
-    titileElement.textContent = item;
-    PostTitleElement.appendChild(titileElement);
-  })
+  // タイトルと本文をforEachで追加
+  postData.forEach((postData) => {
+    const postElement = document.createElement("div");
+    postElement.classList.add("post");
+
+    const titleElement = document.createElement("h2");
+    titleElement.textContent = postData.title;
+    postElement.appendChild(titleElement);
+
+    const dateElement = document.createElement("p");
+    dateElement.textContent = postData.date;
+    postElement.appendChild(dateElement);
+
+    const contentElement = document.createElement("p");
+    contentElement.textContent = postData.content;
+    postElement.appendChild(contentElement);
+
+    postContainerElement.appendChild(postElement);
+  });
 };
