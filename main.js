@@ -11,7 +11,7 @@ const fetchData = async () => {
     //console.log(resJson.data.posts.nodes);
     //console.log(nodesRes);
 
-    // ②タイトルとコンテンツ の情報取得
+    // ②タイトルとコンテンツその他 の情報取得
     const postsData = getPostsData(nodesRes);
     console.log(postsData);
 
@@ -41,6 +41,7 @@ function getAllQueryData(url) {
               nodes {
                 title
                 content
+                date
               }
             }
           }
@@ -64,6 +65,7 @@ function getPostsData(data) {
     return {
       title: post.title,
       content: post.content,
+      date: post.date,
     };
   });
 }
@@ -80,6 +82,10 @@ const viewPostData = (postData) => {
     const titleElement = document.createElement("h2");
     titleElement.textContent = postData.title;
     postElement.appendChild(titleElement);
+
+    const dateElement = document.createElement("p");
+    dateElement.textContent = postData.date;
+    postElement.appendChild(dateElement);
 
     const contentElement = document.createElement("p");
     contentElement.textContent = postData.content;
