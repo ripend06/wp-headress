@@ -11,12 +11,15 @@ const fetchData = async () => {
     //console.log(resJson.data.posts.nodes);
 
     //②WP タイトル の情報取得
-    const titles = await getPostsNodesData(nodesRes, 'title');
+    let titles = await getPostsNodesData(nodesRes, 'title');
     console.log(titles);
 
     //③WP 本文 の情報取得
     const contents = await getPostsNodesData(nodesRes, 'content');
     console.log(contents);
+
+    //
+    viewPostdata(titles);
 
   } catch (error) {
     console.error(error);
@@ -66,3 +69,16 @@ function getPostsNodesData(data, propertyName) {
       resolve(datas);
   });
 }
+
+//postコンテンツ表示
+const viewPostdata = (titles) => {
+  const PostTitleElement = document.querySelector("#js-post--titile");
+  const PostContentElemen = document.querySelector("#js-post--content");
+
+  console.log(titles);
+  titles.forEach(item => {
+    const titileElement = document.createElement("li");
+    titileElement.textContent = item;
+    PostTitleElement.appendChild(titileElement);
+  })
+};
