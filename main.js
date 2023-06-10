@@ -59,13 +59,26 @@ function getAllQueryData(url) {
   });
 }
 
-// タイトルと本文のオブジェクトを作成
+// フロントエンドで日付をフォーマットする例
+function formatDate(dateString) {
+  const date = new Date(dateString);
+  const year = date.getFullYear();
+  const month = ("0" + (date.getMonth() + 1)).slice(-2);
+  const day = ("0" + date.getDate()).slice(-2);
+  return `${year}.${month}.${day}`;
+}
+// 使用例
+// const formattedDate = formatDate("2023-06-06T12:34:56");
+// console.log(formattedDate); // 出力: 2023.06.06
+
+
+// タイトルと本文その他のオブジェクトを作成
 function getPostsData(data) {
   return data.map((post) => {
     return {
       title: post.title,
       content: post.content,
-      date: post.date,
+      date: formatDate(post.date), // 日付をフォーマット
     };
   });
 }
